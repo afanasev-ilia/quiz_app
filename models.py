@@ -1,11 +1,16 @@
-from sqlalchemy import Table, Column, Integer, String, MetaData
+from datetime import datetime
 
-metadata = MetaData
+from sqlalchemy import MetaData, Table, Column, Integer, String, TIMESTAMP
 
-users = Table(
-    'users',
+metadata = MetaData()
+
+
+question = Table(
+    'question',
     metadata,
     Column('id', Integer, primary_key=True),
-    Column('username', String, nullable=False),
-    Column('password', String, nullable=False),
+    Column('question_id', Integer),
+    Column('question', String),
+    Column('answer', String),
+    Column('created_at', TIMESTAMP, default=datetime.utcnow),
 )
