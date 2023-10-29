@@ -7,9 +7,12 @@ from schema import Question_num
 
 app = FastAPI()
 
+def get_last_question(model: ModelQuestion = ModelQuestion) -> ModelQuestion:
+    return db.session.query(model).order_by(model.id.desc()).first()
 
 @app.post('/questions')
 async def questions(item: Question_num):
+    last = get_last_question()
     question_num = item.question_num
     async with aiohttp.ClientSession() as session:
         async with session.get(
@@ -25,3 +28,4 @@ async def questions(item: Question_num):
                     async with session.get(f'https://jservice.io/api/random') as api_res:
                         new_question = await api_res.json()
                         model = new_question[0]
+    return last.model if last else []
