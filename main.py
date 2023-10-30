@@ -1,14 +1,22 @@
+import os
+
 import aiohttp
 from fastapi import FastAPI
-from fastapi_asyncalchemy import db
+from fastapi_async_sqlalchemy import db, SQLAlchemyMiddleware
 from sqlalchemy.sql import exists
 
-from schema import Question_num
+from models import question
+from schemas import Question_num
+from config import DATABASE_URL
 
 app = FastAPI()
 
-def get_last_question(model: ModelQuestion = ModelQuestion) -> ModelQuestion:
+app.add_middleware(SQLAlchemyMiddleware, db_url=DATABASE_URL)
+
+
+def get_last_question(model: question = question) -> question:
     return db.session.query(model).order_by(model.id.desc()).first()
+
 
 @app.post('/questions')
 async def questions(item: Question_num):
@@ -22,7 +30,7 @@ async def questions(item: Question_num):
             for model in api_data:
                 while db.session.query(exists().where(model.question_id == model["id"])).scalar():
                     print(
-                        f'id {model["id"]} with question: "{model["question"]}" '
+                        f'id {model["id"]} with question: "{model["question"]}"'
                         f'is already exists in database!'
                     )
                     async with session.get(f'https://jservice.io/api/random') as api_res:
