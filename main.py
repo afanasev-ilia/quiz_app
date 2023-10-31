@@ -1,8 +1,6 @@
-import os
-
 import aiohttp
 from fastapi import FastAPI
-from fastapi_async_sqlalchemy import db, SQLAlchemyMiddleware
+from fastapi_sqlalchemy import db, DBSessionMiddleware
 from sqlalchemy.sql import exists
 
 from models import question
@@ -11,7 +9,7 @@ from config import DATABASE_URL
 
 app = FastAPI()
 
-app.add_middleware(SQLAlchemyMiddleware, db_url=DATABASE_URL)
+app.add_middleware(DBSessionMiddleware, db_url=DATABASE_URL)
 
 
 def get_last_question(model: question = question) -> question:
