@@ -3,7 +3,7 @@ from fastapi import FastAPI
 from fastapi_sqlalchemy import db, DBSessionMiddleware
 from sqlalchemy.sql import exists
 
-from models import question
+from models import Question
 from schemas import Question_num
 from config import DATABASE_URL
 
@@ -12,7 +12,7 @@ app = FastAPI()
 app.add_middleware(DBSessionMiddleware, db_url=DATABASE_URL)
 
 
-def get_last_question(model: question = question) -> question:
+def get_last_question(model: Question = Question) -> Question:
     return db.session.query(model).order_by(model.id.desc()).first()
 
 
