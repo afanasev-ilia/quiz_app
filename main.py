@@ -18,8 +18,9 @@ def get_last_question(model: Question = Question) -> Question:
 
 @app.post('/questions')
 async def questions(item: Question_num):
-    last = get_last_question()
-    return last
+    pass
+    # last = get_last_question()
+    # return last
     # question_num = item.question_num
     # async with aiohttp.ClientSession() as session:
     #     async with session.get(
