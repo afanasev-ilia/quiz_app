@@ -1,4 +1,5 @@
 import aiohttp
+
 from fastapi import FastAPI
 from fastapi_sqlalchemy import db, DBSessionMiddleware
 from sqlalchemy.sql import exists
