@@ -1,8 +1,8 @@
 from datetime import datetime
 
-from sqlalchemy import Column, DateTime, Integer, String, MetaData
+from sqlalchemy import Column, Integer, MetaData, String, TIMESTAMP
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.sql import func
+
 
 metadata = MetaData()
 
@@ -15,7 +15,4 @@ class Question(Base):
     question_id = Column(Integer)
     question = Column(String)
     answer = Column(String)
-    created_at = Column(
-        DateTime(timezone=True),
-        server_default=func.now()
-    )
+    created_at = Column(TIMESTAMP, default=datetime.utcnow)

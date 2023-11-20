@@ -1,8 +1,8 @@
-import aiohttp
+# import aiohttp
 
 from fastapi import FastAPI
 from fastapi_sqlalchemy import db, DBSessionMiddleware
-from sqlalchemy.sql import exists
+# from sqlalchemy.sql import exists
 
 from models import Question
 from schemas import Question_num
@@ -19,7 +19,7 @@ def get_last_question(model: Question = Question) -> Question:
 
 @app.post('/questions')
 async def questions(item: Question_num):
-    pass
+    print(item)
     # last = get_last_question()
     # return last
     # question_num = item.question_num
