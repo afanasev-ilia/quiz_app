@@ -1,10 +1,8 @@
 from datetime import datetime
 
-from sqlalchemy import Column, Integer, MetaData, String, TIMESTAMP
+from sqlalchemy import Column, Integer, String, TIMESTAMP
 from sqlalchemy.ext.declarative import declarative_base
 
-
-metadata = MetaData()
 
 Base = declarative_base()
 
