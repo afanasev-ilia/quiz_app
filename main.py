@@ -13,6 +13,12 @@ app = FastAPI()
 app.add_middleware(DBSessionMiddleware, db_url=DATABASE_URL)
 
 
+def is_question_id_exists(question: dict, model: Question = Question) -> bool:
+    return db.session.query(
+        exists().where(model.question_id == question['id'])
+    ).scalar()
+
+
 def get_last_question(model: Question = Question) -> Question:
     return db.session.query(model).order_by(model.id.desc()).first()
 
@@ -23,20 +29,28 @@ async def questions(item: Question_num):
     question_num = item.question_num
     async with aiohttp.ClientSession() as session:
         async with session.get(
-            f'https://jservice.io/api/random?count={question_num}'
+                f"https://jservice.io/api/random?count={question_num}"
         ) as resp:
             api_data = await resp.json()
-            for model in api_data:
-                while db.session.query(
-                    exists().where(model.question_id == model['id'])
-                ).scalar():
+            for q in api_data:
+                while is_question_id_exists(q):
                     print(
-                        f'id {model["id"]} with question:"{model["question"]}"'
+                        f'id {q["id"]} with question: "{q["question"]}" '
                         f'is already exists in database!'
                     )
                     async with session.get(
-                        f'https://jservice.io/api/random'
+                        f"https://jservice.io/api/random",
                     ) as api_res:
                         new_question = await api_res.json()
-                        model = new_question[0]
-    return last.model if last else []
+                        q = new_question[0]
+
+                db_question = Question(
+                    question_id=q["id"],
+                    question=q["question"],
+                    answer=q["answer"],
+                    created_at=q["created_at"],
+                )
+                db.session.add(db_question)
+            db.session.commit()
+
+    return last.question if last else []
