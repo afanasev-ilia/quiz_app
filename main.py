@@ -29,7 +29,7 @@ async def questions(item: Question_num):
     question_num = item.question_num
     async with aiohttp.ClientSession() as session:
         async with session.get(
-                f"https://jservice.io/api/random?count={question_num}"
+                f'https://jservice.io/api/random?count={question_num}'
         ) as resp:
             api_data = await resp.json()
             for q in api_data:
@@ -39,7 +39,7 @@ async def questions(item: Question_num):
                         f'is already exists in database!'
                     )
                     async with session.get(
-                        f"https://jservice.io/api/random",
+                        'https://jservice.io/api/random',
                     ) as api_res:
                         new_question = await api_res.json()
                         q = new_question[0]
